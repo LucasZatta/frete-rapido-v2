@@ -1,16 +1,24 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"database/sql"
+	"fmt"
+)
 
 type QuoteRepository interface {
+	GetQuote()
 }
 
 type quoteRepository struct {
-	db *gorm.DB
+	db *sql.DB
 }
 
-func New(db *gorm.DB) *quoteRepository {
+func New(db *sql.DB) *quoteRepository {
 	return &quoteRepository{
 		db: db,
 	}
+}
+
+func (p *quoteRepository) GetQuote() {
+	fmt.Println("hello")
 }
