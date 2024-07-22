@@ -28,32 +28,22 @@ func New(quoteService service.QuoteService) *quoteHttp {
 }
 
 func (p *quoteHttp) GetQuotes(c *gin.Context) {
-	// lastQuotes := c.Query("last_quotes") // shortcut for c.Request.URL.Query().Get("lastname")
+	lastQuotesParam := c.Query("last_quotes")
 
-	// fmt.Println(lastQuotes)
-	// if len(lastQuotes) == 0 {
-	// 	fmt.Println("quotes param is empty")
-	// }
-
-	//
-	// id, err := quoteDecode.DecodeStringIDFromURI(r)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
-
-	// product, err := p.productService.GetByID(ctx, id)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
-
-	quote, err := p.quoteService.GetByID(1)
+	lastQuotes, err := p.quoteService.GetLastQuotes(lastQuotesParam)
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.JSON(http.StatusAccepted, quote)
+	expansiverQuote, cheapestQuote, err := p.quoteService.GetMaxMinQuotes()
+
+	lastQuotesResponse := &models.LastQuotesResponse{
+		LastQuotes:      *lastQuotes,
+		ExpansiverQuote: *expansiverQuote,
+		CheapestQuote:   *cheapestQuote,
+	}
+
+	c.JSON(http.StatusAccepted, lastQuotesResponse)
 
 }
 
@@ -120,7 +110,7 @@ func (p *quoteHttp) SimulateQuoteHandler(c *gin.Context) {
 		}
 	}
 
-	created, err := p.quoteService.Create(&quotes[0])
+	created, err := p.quoteService.Create(&quotes)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}

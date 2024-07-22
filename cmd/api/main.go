@@ -17,7 +17,7 @@ func main() {
 	// 	panic(err)
 	// }
 
-	db := database.New() //put it inside env maybe
+	db := database.New()
 
 	quoteRepository := repository.New(db)
 	quoteService := service.New(quoteRepository)

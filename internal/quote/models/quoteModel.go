@@ -41,6 +41,19 @@ type QuoteReqBody struct {
 	} `json:"volumes"`
 }
 
+type LastQuotes struct {
+	Name     string
+	Count    int
+	PriceSum float64
+	PriveAvg float64
+}
+
+type LastQuotesResponse struct {
+	LastQuotes      []LastQuotes
+	ExpansiverQuote Quote
+	CheapestQuote   Quote
+}
+
 func (qrb *QuoteReqBody) Validate() error {
 	qrb.Recipient.Address.Zipcode = util.ClearString(qrb.Recipient.Address.Zipcode)
 	if !util.ValidateZipcode(qrb.Recipient.Address.Zipcode) {
