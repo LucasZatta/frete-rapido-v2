@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/lucaszatta/frete-rapido-v2/internal/quote/service"
 )
 
 type QuoteHttp interface {
-	GetQuote(c *gin.Context)
+	GetQuotes(c *gin.Context)
+	SimulateQuote(c *gin.Context)
 }
 
 type quoteHttp struct {
@@ -19,9 +22,13 @@ func New(quoteService service.QuoteService) *quoteHttp {
 	}
 }
 
-func (p *quoteHttp) GetQuote(c *gin.Context) {
-	// ctx := r.Context()
+func (p *quoteHttp) GetQuotes(c *gin.Context) {
+	lastQuotes := c.Query("last_quotes") // shortcut for c.Request.URL.Query().Get("lastname")
 
+	fmt.Println(lastQuotes)
+	if len(lastQuotes) == 0 {
+		fmt.Println("quotes param is empty")
+	}
 	p.quoteService.GetQuote()
 
 	//
@@ -38,4 +45,8 @@ func (p *quoteHttp) GetQuote(c *gin.Context) {
 	// }
 
 	// encode.WriteJsonResponse(w, product, http.StatusOK)
+}
+
+func (p *quoteHttp) SimulateQuote(c *gin.Context) {
+	p.quoteService.GetQuote()
 }

@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type QuoteRepository interface {
@@ -10,10 +11,10 @@ type QuoteRepository interface {
 }
 
 type quoteRepository struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func New(db *sql.DB) *quoteRepository {
+func New(db *gorm.DB) *quoteRepository {
 	return &quoteRepository{
 		db: db,
 	}

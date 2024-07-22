@@ -2,16 +2,13 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lucaszatta/frete-rapido-v2/internal/database"
 	"github.com/lucaszatta/frete-rapido-v2/internal/quote/handlers"
 	"github.com/lucaszatta/frete-rapido-v2/internal/quote/repository"
 	"github.com/lucaszatta/frete-rapido-v2/internal/quote/service"
+	"github.com/lucaszatta/frete-rapido-v2/internal/server"
 )
 
 func main() {
@@ -26,26 +23,12 @@ func main() {
 	quoteService := service.New(quoteRepository)
 	quoteHttp := handlers.New(quoteService)
 
-	// r := chi.NewRouter()
-
-	// r.Get("/products/{id}", quoteHttp.GetQuote)
-
-	// http.ListenAndServe(":8081", r)
-
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
-
 	r := gin.Default()
 
-	r.GET("/", quoteHttp.GetQuote)
+	r.POST("/quote", quoteHttp.SimulateQuote)
+	r.GET("/metrics", quoteHttp.GetQuotes)
 
-	// Declare Server config
-	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", port),
-		Handler:      r,
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
-	}
+	server := server.NewServer(r)
 
 	err := server.ListenAndServe()
 	if err != nil {

@@ -8,6 +8,8 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // type Service struct {
@@ -53,7 +55,7 @@ import (
 // }
 
 type service struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
 var (
@@ -66,18 +68,26 @@ var (
 	dbInstance *service
 )
 
-func New() *sql.DB {
+func New() *gorm.DB {
 	// Reuse Connection
 	if dbInstance != nil {
 		return dbInstance.db
 	}
+
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	dbInstance = &service{
-		db: db,
+
+	gormDB, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: db,
+	}), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
 	}
-	return db
+	dbInstance = &service{
+		db: gormDB,
+	}
+	return gormDB
 }
