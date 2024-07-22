@@ -25,7 +25,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.POST("/quote", quoteHttp.SimulateQuote)
+	r.POST("/quote", quoteHttp.SimulateQuoteHandler)
 	r.GET("/metrics", quoteHttp.GetQuotes)
 
 	server := server.NewServer(r)
