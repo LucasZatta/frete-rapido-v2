@@ -15,5 +15,8 @@ func ClearString(str string) string {
 
 func ValidateZipcode(fieldValue string) bool {
 	return len(fieldValue) == zipcodeLen
+}
 
+func ValidateCNPJ(fieldValue string) bool {
+	return len(fieldValue) == cnpjLen
 }

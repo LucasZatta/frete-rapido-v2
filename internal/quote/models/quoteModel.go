@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -63,6 +64,12 @@ func (qrb *QuoteReqBody) Validate() error {
 }
 
 func (qrb *QuoteReqBody) BuildSimulationRequestBody() (*SimulationReqBody, error) {
+	cnpj := util.ClearString(os.Getenv("CNPJ"))
+
+	if !util.ValidateCNPJ(cnpj) {
+		return &SimulationReqBody{}, errors.New("invalid cnpj")
+	}
+
 	err := qrb.Validate()
 	if err != nil {
 		return &SimulationReqBody{}, err
