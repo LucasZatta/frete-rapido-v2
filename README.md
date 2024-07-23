@@ -6,9 +6,6 @@
 ├── cmd
 │   └── api
 │       └── main.go
-├── go.mod
-├── go.sum
-├── init.sql
 ├── internal
 │   ├── database
 │   │   └── database.go
@@ -29,6 +26,9 @@
 │   │   └── server.go
 │   └── util
 │       └── util.go
+├── go.mod
+├── go.sum
+├── init.sql
 ├── Dockerfile
 ├── Makefile
 └── docker-compose.yml
@@ -73,7 +73,7 @@ DISPATCHER_ZIPCODE=
 
 ```
 
-Then just use the make docker-run command in the terminal and test away 👍.
+Then just use the `make docker-run` command in the terminal and test away 👍.
 If permission is denied, simply run  
 
 `sudo docker-compose up` or `sudo docker compose up`
