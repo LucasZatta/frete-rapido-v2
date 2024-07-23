@@ -45,7 +45,7 @@ type LastQuotes struct {
 	Name     string
 	Count    int
 	PriceSum float64
-	PriveAvg float64
+	PriceAvg float64
 }
 
 type LastQuotesResponse struct {

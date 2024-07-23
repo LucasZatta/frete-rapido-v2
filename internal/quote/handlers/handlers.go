@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -33,11 +34,16 @@ func (p *quoteHttp) GetQuotes(c *gin.Context) {
 	lastQuotes, err := p.quoteService.GetLastQuotes(lastQuotesParam)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	} else if len(*lastQuotes) == 0 {
+		c.JSON(http.StatusNoContent, lastQuotes)
+		return
 	}
 
 	expensiverQuote, cheapestQuote, err := p.quoteService.GetMaxMinQuotes()
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 
 	lastQuotesResponse := &models.LastQuotesResponse{
@@ -60,6 +66,7 @@ func (p *quoteHttp) SimulateQuoteHandler(c *gin.Context) {
 	externalApiReqBody, err := requestBody.BuildSimulationRequestBody()
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 
 	b, err := json.Marshal(externalApiReqBody)
@@ -73,12 +80,15 @@ func (p *quoteHttp) SimulateQuoteHandler(c *gin.Context) {
 		dummyResponse, err := os.Open("mockResponse.json")
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
+			return
 		}
 		jsonParser := json.NewDecoder(dummyResponse)
 		if err = jsonParser.Decode(&simulationResponse); err != nil {
 			c.AbortWithError(http.StatusInternalServerError, err)
+			return
 		}
 	} else {
+		fmt.Println(gin.Mode())
 		path := os.Getenv("API_PATH")
 		resp, err := http.Post(path, "application/json", bytes.NewBuffer(b))
 		if err != nil {
@@ -116,6 +126,7 @@ func (p *quoteHttp) SimulateQuoteHandler(c *gin.Context) {
 	created, err := p.quoteService.Create(&quotes)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusAccepted, created)

@@ -44,6 +44,11 @@ func (p *quoteRepository) GetLastQuotes(lastQuotes string) (*[]models.LastQuotes
 		return nil, tx.Error
 	}
 
+	// fmt.Println("ROWS AFFECTED", tx.RowsAffected)
+	// if len(quotes) == 0 {
+	// 	return nil, errors.New("no entries that satisfy query")
+	// }
+
 	return &quotes, nil
 }
 

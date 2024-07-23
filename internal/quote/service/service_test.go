@@ -72,19 +72,19 @@ func TestService_GetLastQuotes(t *testing.T) {
 			Name:     "carrier",
 			Count:    2,
 			PriceSum: 15.0,
-			PriveAvg: 7.0,
+			PriceAvg: 7.0,
 		},
 		{
 			Name:     "carrier 2",
 			Count:    2,
 			PriceSum: 40.0,
-			PriveAvg: 20.0,
+			PriceAvg: 20.0,
 		},
 		{
 			Name:     "carrier 3",
 			Count:    1,
 			PriceSum: 10.0,
-			PriveAvg: 10.0,
+			PriceAvg: 10.0,
 		},
 	}
 

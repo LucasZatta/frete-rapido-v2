@@ -12,10 +12,7 @@ import (
 )
 
 func main() {
-	// cfg, err := config.Load(os.Args)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	gin.SetMode(gin.ReleaseMode)
 
 	db := database.New()
 
