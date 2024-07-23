@@ -21,7 +21,6 @@ services:
       - .env
     container_name: api_docker
     build: .
-    image: lucasszatta/go-frete:latest
     ports:
       - 8080:8080
     restart: always

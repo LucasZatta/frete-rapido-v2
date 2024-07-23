@@ -65,9 +65,14 @@ func (qrb *QuoteReqBody) Validate() error {
 
 func (qrb *QuoteReqBody) BuildSimulationRequestBody() (*SimulationReqBody, error) {
 	cnpj := util.ClearString(os.Getenv("CNPJ"))
+	envZipcode := util.ClearString(os.Getenv("DISPATCHER_ZIPCODE"))
 
 	if !util.ValidateCNPJ(cnpj) {
 		return &SimulationReqBody{}, errors.New("invalid cnpj")
+	}
+
+	if !util.ValidateZipcode(envZipcode) {
+		return &SimulationReqBody{}, errors.New("invalid zipcode")
 	}
 
 	err := qrb.Validate()
@@ -80,7 +85,7 @@ func (qrb *QuoteReqBody) BuildSimulationRequestBody() (*SimulationReqBody, error
 		return &SimulationReqBody{}, err
 	}
 
-	dispatcherZipcode, err := strconv.Atoi(os.Getenv("DISPATCHER_ZIPCODE"))
+	dispatcherZipcode, err := strconv.Atoi(envZipcode)
 	if err != nil {
 		return &SimulationReqBody{}, err
 	}
@@ -102,14 +107,14 @@ func (qrb *QuoteReqBody) BuildSimulationRequestBody() (*SimulationReqBody, error
 	}
 
 	newDispatcher := Dispatcher{
-		RegisteredNumber: os.Getenv("CNPJ"),
+		RegisteredNumber: cnpj,
 		Zipcode:          dispatcherZipcode,
 		Volumes:          volumesArray,
 	}
 
 	return &SimulationReqBody{
 		Shipper: Shipper{
-			RegisteredNumber: os.Getenv("CNPJ"),
+			RegisteredNumber: cnpj,
 			Token:            os.Getenv("API_TOKEN"),
 			PlatformCode:     os.Getenv("PLATFORM_CODE"),
 		},
