@@ -9,8 +9,6 @@ import (
 
 //go:generate mockery --name QuoteRepository
 type QuoteRepository interface {
-	CreateSingle(quote *models.Quote) error
-	GetByID(id int) (*models.Quote, error)
 	Create(quotes *[]models.Quote) error
 	GetLastQuotes(lastQuotes string) (*[]models.LastQuotes, error)
 	GetMaxMinQuotes() (*models.Quote, *models.Quote, error)
@@ -24,23 +22,6 @@ func New(db *gorm.DB) *quoteRepository {
 	return &quoteRepository{
 		db: db,
 	}
-}
-
-func (p *quoteRepository) CreateSingle(quote *models.Quote) error {
-	tx := p.db.Create(quote)
-	return tx.Error
-}
-
-func (p *quoteRepository) GetByID(id int) (*models.Quote, error) {
-	quote := &models.Quote{}
-
-	tx := p.db.Where("id = ?", id).First(quote)
-
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-
-	return quote, nil
 }
 
 func (p *quoteRepository) Create(quotes *[]models.Quote) error {

@@ -6,8 +6,6 @@ import (
 )
 
 type QuoteService interface {
-	CreateSingle(quote *models.Quote) (*models.Quote, error)
-	GetByID(id int) (*models.Quote, error)
 	Create(quote *[]models.Quote) (*[]models.Quote, error)
 	GetLastQuotes(lastQuotes string) (*[]models.LastQuotes, error)
 	GetMaxMinQuotes() (*models.Quote, *models.Quote, error)
@@ -21,19 +19,6 @@ func New(quoteRepository repository.QuoteRepository) *quoteService {
 	return &quoteService{
 		quoteRepository: quoteRepository,
 	}
-}
-
-func (p *quoteService) CreateSingle(quote *models.Quote) (*models.Quote, error) {
-	err := p.quoteRepository.CreateSingle(quote)
-	if err != nil {
-		return nil, err
-	}
-	return quote, nil
-}
-
-func (p *quoteService) GetByID(id int) (*models.Quote, error) {
-
-	return p.quoteRepository.GetByID(id)
 }
 
 func (p *quoteService) Create(quotes *[]models.Quote) (*[]models.Quote, error) {

@@ -35,11 +35,14 @@ func (p *quoteHttp) GetQuotes(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	expansiverQuote, cheapestQuote, err := p.quoteService.GetMaxMinQuotes()
+	expensiverQuote, cheapestQuote, err := p.quoteService.GetMaxMinQuotes()
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
 
 	lastQuotesResponse := &models.LastQuotesResponse{
 		LastQuotes:      *lastQuotes,
-		ExpansiverQuote: *expansiverQuote,
+		ExpensiverQuote: *expensiverQuote,
 		CheapestQuote:   *cheapestQuote,
 	}
 

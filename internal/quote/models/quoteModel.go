@@ -50,7 +50,7 @@ type LastQuotes struct {
 
 type LastQuotesResponse struct {
 	LastQuotes      []LastQuotes
-	ExpansiverQuote Quote
+	ExpensiverQuote Quote
 	CheapestQuote   Quote
 }
 
