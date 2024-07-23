@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+//go:generate mockery --name QuoteRepository
 type QuoteRepository interface {
 	CreateSingle(quote *models.Quote) error
 	GetByID(id int) (*models.Quote, error)

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   psql:
     image: postgres:latest
+    container_name: postgres_docker
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
@@ -11,6 +12,32 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - psql_volume:/var/lib/postgresql/data
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+    networks:
+      - frete-gratis
+
+  web:
+    env_file:
+      - .env
+    container_name: api_docker
+    build: .
+    image: lucasszatta/go-frete:latest
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - web_volume:/usr/src/app/
+    command: go run ./cmd/api/main.go -b 0.0.0.0
+    depends_on:
+      - psql
+    networks:
+      - frete-gratis 
+
 
 volumes:
   psql_volume:
+  web_volume:
+
+networks:
+  frete-gratis:
+    driver: bridge

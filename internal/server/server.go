@@ -11,7 +11,6 @@ import (
 )
 
 func NewServer(r *gin.Engine) *http.Server {
-	// gin.SetMode(gin.ReleaseMode)  //set mode using env
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 
 	server := &http.Server{
